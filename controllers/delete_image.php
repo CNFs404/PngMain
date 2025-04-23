@@ -36,6 +36,7 @@ try {
     }
     
     // 删除本地文件
+    
     $file_path = __DIR__ . '/../' . $image['file_path'];
     if (file_exists($file_path)) {
         if (!unlink($file_path)) {
