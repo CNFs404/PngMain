@@ -5,7 +5,6 @@ ini_set('display_errors', 1);
 
 // 启动会话
 session_start();
-
 // 检查用户是否已登录
 if (!isset($_SESSION['user_id'])) {
     header('Content-Type: application/json');
