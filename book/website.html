@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PngMian - 专业的图片管理系统</title>
+    <link href="bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a90e2;
+            --secondary-color: #2c3e50;
+        }
+
+        body {
+            font-family: 'PingFang SC', 'Microsoft YaHei', sans-serif;
+            overflow-x: hidden;
+        }
+
+        /* 视差滚动效果 */
+        .parallax {
+            background-attachment: fixed;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 150px 0;
+            position: relative;
+            overflow: hidden;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+        }
+
+        .hero-content {
+            position: relative;
+            z-login: 2;
+        }
+
+        .hero-section::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            background: url('data:image/svg+xml,<svg width="20" height="20" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><rect width="20" height="20" fill="none"/><circle cx="3" cy="3" r="1" fill="rgba(255,255,255,0.2)"/></svg>') repeat;
+            opacity: 0.3;
+            animation: float 20s linear infinite;
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+            100% { transform: translateY(0); }
+        }
+
+        /* 3D卡片效果 */
+        .feature-card {
+            border: none;
+            border-radius: 15px;
+            transition: all 0.5s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            perspective: 1000px;
+            transform-style: preserve-3d;
+            cursor: pointer;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.2);
+        }
+
+        .feature-card .card-body {
+            transform-style: preserve-3d;
+            transition: transform 0.5s ease;
+        }
+
+        .feature-icon {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .feature-card:hover .feature-icon {
+            transform: scale(1.2);
+        }
+
+        /* 滚动动画 */
+        .scroll-reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.6s ease;
+        }
+
+        .scroll-reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* 响应式图片展示 */
+        .image-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            padding: 20px;
+        }
+
+        .gallery-item {
+            position: relative;
+            overflow: hidden;
+            border-radius: 10px;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        /* 现代化的按钮样式 */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border: none;
+            padding: 12px 30px;
+            border-radius: 25px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-primary::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: rgba(255,255,255,0.2);
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover::before {
+            left: 0;
+        }
+
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.3);
+        }
+
+        /* 响应式调整 */
+        @media (max-width: 768px) {
+            .hero-section {
+                padding: 100px 0;
+            }
+            
+            .feature-card {
+                margin-bottom: 20px;
+            }
+        }
+
+        /* 产品展示样式 */
+        .product-showcase {
+            background-color: #f8f9fa;
+        }
+
+        .product-card {
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .product-image {
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .product-image img {
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image img {
+            transform: scale(1.05);
+        }
+
+        /* 使用场景样式 */
+        .case-card {
+            background: white;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .case-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        /* 用户评价样式 */
+        .testimonial-card {
+            transition: transform 0.3s ease;
+        }
+
+        .testimonial-card:hover {
+            transform: translateY(-5px);
+        }
+
+        /* 价格方案样式 */
+        .pricing-card {
+            transition: all 0.3s ease;
+        }
+
+        .pricing-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+        }
+
+        .pricing-card .badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            padding: 5px 15px;
+            border-radius: 20px;
+        }
+
+        .price {
+            color: var(--primary-color);
+        }
+    </style>
+</head>
+<body>
+    <!-- 导航栏 -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-white fixed-top shadow-sm">
+        <div class="container">
+            <a class="navbar-brand" href="#">
+                <i class="fas fa-images me-2"></i>PngMian
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">功能特点</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#stats">数据统计</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">联系我们</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="https://github.com/CNFs404/PngMain" target="_blank">
+                            <i class="fab fa-github"></i> Github
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="btn btn-primary ms-3" href="../login">立即使用</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <section class="hero-section parallax">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 hero-content" data-aos="fade-right">
+                    <h1 class="display-4 fw-bold mb-4">专业的图片管理系统</h1>
+                    <p class="lead mb-4">轻松管理您的图片资源，提供强大的组织、分类和共享功能。让图片管理变得简单而高效。</p>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="image-gallery">
+                        <div class="gallery-item">
+                            <img src="http://tc.hvhlz.cc/PNG/20250421/6806403a084f9" alt="图片预览">
+                        </div>
+                        <div class="gallery-item">
+                            <img src="http://tc.hvhlz.cc/PNG/20250421/6806403a315cf" alt="图片预览">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 功能特点 -->
+    <section id="features" class="py-5">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">核心功能</h2>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-folder-open feature-icon"></i>
+                            <h3 class="h5">文件夹管理</h3>
+                            <p>轻松创建和管理文件夹，让图片资源井然有序</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-share-alt feature-icon"></i>
+                            <h3 class="h5">快速分享</h3>
+                            <p>一键生成分享链接，方便与他人共享图片资源</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="card feature-card h-100">
+                        <div class="card-body text-center">
+                            <i class="fas fa-mobile-alt feature-icon"></i>
+                            <h3 class="h5">移动端支持</h3>
+                            <p>完美适配移动设备，随时随地管理您的图片</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品展示 -->
+    <section class="product-showcase py-5 bg-light">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">产品展示</h2>
+            <div class="row g-4">
+                <div class="col-md-6" data-aos="fade-right">
+                    <div class="product-card p-4 bg-white rounded-3 shadow-sm">
+                        <h3 class="h4 mb-3">智能分类</h3>
+                        <p class="mb-4">基于AI技术的智能图片分类系统，自动识别图片内容并进行智能分类，让管理更轻松。</p>
+                        <div class="product-image">
+                            <img src="http://tc.hvhlz.cc/PNG/20250421/6806403a084f9" alt="智能分类" class="img-fluid rounded">
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6" data-aos="fade-left">
+                    <div class="product-card p-4 bg-white rounded-3 shadow-sm">
+                        <h3 class="h4 mb-3">批量处理</h3>
+                        <p class="mb-4">支持批量上传、编辑、导出图片，大幅提升工作效率，节省宝贵时间。</p>
+                        <div class="product-image">
+                            <img src="http://tc.hvhlz.cc/PNG/20250421/6806403a315cf" alt="批量处理" class="img-fluid rounded">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 使用场景 -->
+    <section class="use-cases py-5">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">使用场景</h2>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="case-card text-center p-4">
+                        <i class="fas fa-building fa-3x mb-3 text-primary"></i>
+                        <h3 class="h5">企业团队</h3>
+                        <p>适合企业团队协作，统一管理图片资源，提高工作效率</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="case-card text-center p-4">
+                        <i class="fas fa-camera fa-3x mb-3 text-primary"></i>
+                        <h3 class="h5">摄影师</h3>
+                        <p>专业摄影师的最佳选择，轻松管理大量作品，快速分享给客户</p>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="case-card text-center p-4">
+                        <i class="fas fa-shopping-bag fa-3x mb-3 text-primary"></i>
+                        <h3 class="h5">电商卖家</h3>
+                        <p>电商卖家的得力助手，高效管理商品图片，一键上传到店铺</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 开源说明 -->
+    <section class="open-source py-5 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6" data-aos="fade-right">
+                    <h2 class="mb-4">开源项目</h2>
+                    <p class="lead mb-4">PngMian 是一个完全开源的项目，我们欢迎所有开发者参与贡献。</p>
+                    <div class="d-flex gap-3">
+                        <a href="https://github.com/CNFs404/PngMain" class="btn btn-dark" target="_blank">
+                            <i class="fab fa-github me-2"></i>GitHub 仓库
+                        </a>
+                        <a href="https://github.com/CNFs404/PngMain/issues" class="btn btn-outline-dark" target="_blank">
+                            <i class="fas fa-bug me-2"></i>提交 Issue
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-6" data-aos="fade-left">
+                    <div class="card bg-white p-4 shadow-sm">
+                        <h3 class="h5 mb-3">项目特点</h3>
+                        <ul class="list-unstyled">
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>完全开源，MIT 许可证</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>活跃的社区支持</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>详细的开发文档</li>
+                            <li class="mb-2"><i class="fas fa-check text-success me-2"></i>欢迎提交 Pull Request</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 价格方案 -->
+    <section class="pricing py-5">
+        <div class="container">
+            <h2 class="text-center mb-5" data-aos="fade-up">价格方案</h2>
+            <div class="row g-4">
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="pricing-card p-4 bg-white rounded-3 shadow-sm text-center">
+                        <h3 class="h4 mb-3">基础版</h3>
+                        <div class="price mb-3">
+                            <span class="h2">¥0</span>
+                            <span class="text-muted">/月</span>
+                        </div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2">5GB存储空间</li>
+                            <li class="mb-2">基础图片管理</li>
+                            <li class="mb-2">社区支持</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline-primary">立即开始</a>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="pricing-card p-4 bg-white rounded-3 shadow-sm text-center">
+                        <div class="badge bg-primary mb-3">推荐</div>
+                        <h3 class="h4 mb-3">专业版</h3>
+                        <div class="price mb-3">
+                            <span class="h2">¥19</span>
+                            <span class="text-muted">/月</span>
+                        </div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2">26G存储空间</li>
+                            <li class="mb-2">高级图片管理</li>
+                            <li class="mb-2">团队协作</li>
+                            <li class="mb-2">优先支持</li>
+                        </ul>
+                        <a href="#" class="btn btn-primary">立即升级</a>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="300">
+                    <div class="pricing-card p-4 bg-white rounded-3 shadow-sm text-center">
+                        <h3 class="h4 mb-3">企业版</h3>
+                        <div class="price mb-3">
+                            <span class="h2">¥299</span>
+                            <span class="text-muted">/月</span>
+                        </div>
+                        <ul class="list-unstyled mb-4">
+                            <li class="mb-2">无限存储空间</li>
+                            <li class="mb-2">企业级功能</li>
+                            <li class="mb-2">专属客服</li>
+                            <li class="mb-2">API接口</li>
+                        </ul>
+                        <a href="#" class="btn btn-outline-primary">联系我们</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 数据统计 -->
+    <section id="stats" class="stats-section parallax">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4" data-aos="fade-up">
+                    <div class="stat-item">
+                        <div class="stat-number">10,000+</div>
+                        <div class="stat-label">活跃用户</div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="100">
+                    <div class="stat-item">
+                        <div class="stat-number">1,000,000+</div>
+                        <div class="stat-label">管理图片</div>
+                    </div>
+                </div>
+                <div class="col-md-4" data-aos="fade-up" data-aos-delay="200">
+                    <div class="stat-item">
+                        <div class="stat-number">99.9%</div>
+                        <div class="stat-label">服务可用性</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer id="contact">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-4 mb-4" data-aos="fade-up">
+                    <h5>关于我们</h5>
+                    <p>PngMian 致力于提供最专业的图片管理解决方案，让您的图片资源管理更加高效。</p>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="100">
+                    <h5>快速链接</h5>
+                    <ul class="list-unstyled">
+                        <li><a href="#" class="text-white">使用文档</a></li>
+                        <li><a href="#" class="text-white">常见问题</a></li>
+                        <li><a href="#" class="text-white">技术支持</a></li>
+                        <li><a href="https://github.com/yourusername/PngMian" class="text-white" target="_blank">GitHub 仓库</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-4" data-aos="fade-up" data-aos-delay="200">
+                    <h5>联系方式</h5>
+                    <ul class="list-unstyled">
+                        <li><i class="fas fa-envelope me-2"></i> support@pngmian.com</li>
+                    </ul>
+                </div>
+            </div>
+            <hr class="mt-4">
+            <div class="text-center">
+                <p>&copy; 2025 PngMian. 保留所有权利。</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="bootstrap.bundle.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>
+        // 初始化AOS动画库
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
+
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // 滚动动画
+        const scrollRevealElements = document.querySelectorAll('.scroll-reveal');
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                }
+            });
+        }, {
+            threshold: 0.1
+        });
+
+        scrollRevealElements.forEach(element => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html> 
