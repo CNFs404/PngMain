@@ -14,36 +14,80 @@
 
 ## 系统要求
 
+### 服务器要求
 - PHP 7.4 或更高版本
 - MySQL 5.7 或更高版本
+- Web服务器（推荐 Apache 或 Nginx）
 - 支持 GD 或 Imagick 扩展
 - 支持 SMTP 邮件服务
-- 支持 mod_rewrite 的 Web 服务器（如 Apache）
+- 支持 mod_rewrite 模块
 
-## 安装说明
+### 目录权限要求
+确保以下目录具有写入权限：
+- `uploads/` 目录
+- `PNG/` 目录
+- `config.php` 文件
 
-1. 将项目文件上传到 Web 服务器
-2. 访问 `install.php` 进行安装
-3. 按照安装向导完成以下步骤：
-   - 数据库配置
-   - SMTP 邮件服务器配置
-   - 管理员账号设置
+## 快速开始
 
-### 数据库配置
+### 1. 下载安装
+1. 下载最新版本
+2. 解压到网站根目录
+3. 确保目录权限正确
 
-- 数据库主机
+### 2. 配置 Web 服务器
+
+#### Nginx 配置
+在 Nginx 配置文件中添加：
+```nginx
+location / {
+    if (!-e $request_filename){
+        rewrite ^/folder/([0-9]+)$ /views/index.php?folder=$1 last;
+        rewrite ^/([^\.]+)$ /$1.php last;
+        rewrite ^/([^\.]+)$ /$1.html last;
+        rewrite ^(.*)$ $1.jpg last;
+        rewrite ^(.*)$ $1.jpeg last;
+        rewrite ^(.*)$ $1.png last;
+        rewrite ^(.*)$ $1.gif last;
+    }
+}
+location /PNG/ {
+    add_header Access-Control-Allow-Origin *;
+    expires 7d;
+    add_header Cache-Control "public, no-transform";
+    try_files $uri $uri.jpg $uri.jpeg $uri.png $uri.gif 404;
+}
+```
+
+### 配置默认文档
+
+```
+book/website.html
+```
+
+### 3. 安装步骤
+
+1. 访问 `http://你的域名/install`
+2. 按照安装向导完成以下步骤：
+
+#### 3.1 数据库配置
+- 数据库主机（通常是 localhost）
 - 数据库用户名
 - 数据库密码
-- 数据库名称
+- 数据库名称（默认为 pngmain）
 
-### SMTP 配置
-
+#### 3.2 SMTP 配置
 - SMTP 服务器地址
-- SMTP 端口
-- SMTP 用户名
+- SMTP 端口（通常是 465 或 587）
+- SMTP 用户名（邮箱地址）
 - SMTP 密码
 - 发件人邮箱
 - 发件人名称
+
+#### 3.3 管理员账号设置
+- 管理员用户名
+- 管理员密码
+- 管理员邮箱
 
 ## 目录结构
 
@@ -62,7 +106,7 @@
 ├── views/                 # 视图文件
 │   ├── index.php          # 首页
 │   └── register.php       # 注册页
-└── png/               # 上传文件目录
+└── PNG/                   # 上传文件目录
 ```
 
 ## 配置文件说明
@@ -74,7 +118,7 @@
 define('DB_HOST', 'localhost');
 define('DB_USER', 'username');
 define('DB_PASS', 'password');
-define('DB_NAME', 'database_name');
+define('DB_NAME', 'pngmain');
 
 // SMTP 配置
 define('SMTP_HOST', 'smtp.example.com');
@@ -94,7 +138,6 @@ define('INSTALLED', true);
 ## 使用说明
 
 ### 用户功能
-
 1. 注册账号
 2. 登录系统
 3. 上传图片
@@ -102,7 +145,6 @@ define('INSTALLED', true);
 5. 分享图片
 
 ### 管理员功能
-
 1. 用户管理
 2. 图片管理
 3. 系统设置
@@ -115,6 +157,18 @@ define('INSTALLED', true);
 - 支持 CSRF 防护
 - 支持 XSS 防护
 - 支持 SQL 注入防护
+
+## 维护建议
+
+### 定期维护
+- 定期备份数据库
+- 定期清理上传目录
+- 定期检查系统日志
+
+### 安全维护
+- 定期更新系统
+- 定期检查文件权限
+- 定期修改管理员密码
 
 ## 更新日志
 
@@ -138,6 +192,5 @@ MIT License
 ## 联系方式
 
 如有问题或建议，请通过以下方式联系：
-
 - 邮箱：3366251627@qq.com
 - GitHub：https://github.com/CNFs404
