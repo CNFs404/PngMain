@@ -139,5 +139,5 @@ MIT License
 
 如有问题或建议，请通过以下方式联系：
 
-- 邮箱：3595655855@qq.com
+- 邮箱：3366251627@qq.com
 - GitHub：https://github.com/CNFs404
