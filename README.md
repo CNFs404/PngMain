@@ -1,6 +1,11 @@
 # 图床系统
 
 一个基于 PHP 的简单图床系统，支持图片上传、管理和分享功能。
+![主页](https://github.com/user-attachments/assets/b0c3d46d-8186-472a-ad40-760e3bcfa585)
+![多张上传](https://github.com/user-attachments/assets/863c636e-bd46-4576-9159-fbb416c511ad)
+![文件夹](https://github.com/user-attachments/assets/cc6f9dd1-9afe-430f-b2a1-5be36303f9a2)
+![游览](https://github.com/user-attachments/assets/cd3c0097-6124-4f84-bceb-acfa1dc334a2)
+![主页](https://github.com/user-attachments/assets/7bf2b1ae-64f6-4ae9-874d-11c32b39174a)
 
 ## 功能特性
 
