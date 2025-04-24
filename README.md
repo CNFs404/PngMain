@@ -1,4 +1,5 @@
-# 图床系统
+![](https://img.shields.io/github/stars/pandao/editor.md.svg) ![](https://img.shields.io/github/forks/pandao/editor.md.svg) ![](https://img.shields.io/github/tag/pandao/editor.md.svg)
+# PngMain图床系统 🌅
 
 一个基于 PHP 的简单图床系统，支持图片上传、管理和分享功能。
 ![主页](https://github.com/user-attachments/assets/b0c3d46d-8186-472a-ad40-760e3bcfa585)
